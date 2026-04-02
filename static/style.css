@@ -436,20 +436,23 @@ body {
 .form-input:focus { border-color: var(--ink); background: var(--paper); }
 .form-input::placeholder { color: var(--ink-faint); }
 
-.amount-wrap { position: relative; }
+.amount-wrap { position: relative; width: 100%; }
 
 .amount-prefix {
     position: absolute;
-    left: 13px;
+    left: 14px;
     top: 50%;
     transform: translateY(-50%);
+    min-width: 28px;
     font-size: .98rem;
     font-weight: 500;
     color: var(--ink-muted);
     pointer-events: none;
+    text-align: left;
+    z-index: 1;
 }
 
-.amount-input { padding-left: 30px; }
+.amount-input { padding-left: 60px; }
 
 /* Type toggle */
 .type-toggle { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -510,15 +513,15 @@ body {
 }
 
 .btn-pop {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     background: var(--pop);
     color: var(--ink);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
+    font-size: 1.5rem;
     font-weight: 800;
     line-height: 1;
     flex-shrink: 0;
