@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="wordmark">BUDGET</div>
+            <div class="currency-picker">
+                <span class="currency-label">Currency</span>
+                <form action="/set_currency" method="post" id="currency-form">
+                    <select name="currency" class="currency-select" onchange="document.getElementById('currency-form').submit()">
+                        <option value="USD" {% if currency == 'USD' %}selected{% endif %}>$ USD</option>
+                        <option value="EUR" {% if currency == 'EUR' %}selected{% endif %}>€ EUR</option>
+                        <option value="GBP" {% if currency == 'GBP' %}selected{% endif %}>£ GBP</option>
+                        <option value="JPY" {% if currency == 'JPY' %}selected{% endif %}>¥ JPY</option>
+                        <option value="MYR" {% if currency == 'MYR' %}selected{% endif %}>RM MYR</option>
+                        <option value="SGD" {% if currency == 'SGD' %}selected{% endif %}>S$ SGD</option>
+                        <option value="AUD" {% if currency == 'AUD' %}selected{% endif %}>A$ AUD</option>
+                        <option value="CAD" {% if currency == 'CAD' %}selected{% endif %}>C$ CAD</option>
+                        <option value="INR" {% if currency == 'INR' %}selected{% endif %}>₹ INR</option>
+                        <option value="CNY" {% if currency == 'CNY' %}selected{% endif %}>¥ CNY</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+        <div class="header-hero">
+            <h1>Your Money,<br><span class="accent">Simplified.</span></h1>
+        </div>
+    </header>
+
+    <!-- Summary Strip -->
+    <div class="summary-strip">
+        <div class="stat">
+            <span class="stat-label">Income</span>
+            <span class="stat-value income">{{ currency_symbol }}{{ "%.2f"|format(total_income) }}</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <span class="stat-label">Expenses</span>
+            <span class="stat-value expense">{{ currency_symbol }}{{ "%.2f"|format(total_expense) }}</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <span class="stat-label">Balance</span>
+            <span class="stat-value pop">{{ currency_symbol }}{{ "%.2f"|format(balance) }}</span>
+        </div>
+    </div>
+
+    <!-- Savings / Piggy Bank -->
+    <div class="piggy-section">
+        <div class="piggy-header">
+            <div class="piggy-left">
+                <div class="piggy-icon">⬡</div>
+                <div>
+                    <div class="piggy-title">Savings Goal</div>
+                    <div class="piggy-sub">{{ savings.name if savings else "No goal set yet" }}</div>
+                </div>
+            </div>
+            <button class="piggy-edit-btn" onclick="togglePiggyForm()">
+                {% if savings %}Edit{% else %}+ Set Goal{% endif %}
+            </button>
+        </div>
+
+        {% if savings %}
+        {% set pct = savings.pct %}
+        <div class="piggy-progress-wrap">
+            <div class="piggy-progress-bar">
+                <div class="piggy-progress-fill" style="--pct: {{ '%.0f'|format(pct) }}%"></div>
+            </div>
+            <div class="piggy-meta">
+                <span class="piggy-saved">{{ currency_symbol }}{{ "%.2f"|format(savings.saved) }} saved</span>
+                <span class="piggy-pct">{{ "%.0f"|format(pct) }}%</span>
+                <span class="piggy-goal-amt">of {{ currency_symbol }}{{ "%.2f"|format(savings.goal) }}</span>
+            </div>
+        </div>
+        <div class="piggy-actions">
+            <form action="/savings/deposit" method="post" class="piggy-deposit-form">
+                <input type="number" step="0.01" name="amount" placeholder="Deposit {{ currency_symbol }}..." class="piggy-input" required>
+                <button type="submit" class="piggy-deposit-btn">Add</button>
+            </form>
+            <form action="/savings/delete" method="post" style="display:inline">
+                <button type="submit" class="piggy-delete-btn">✕ Remove</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <div class="piggy-form" id="piggy-form">
+            <form action="/savings/set" method="post">
+                <div class="piggy-form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Goal Name</label>
+                        <input type="text" name="name" placeholder="e.g. Vacation, Emergency Fund" class="form-input" value="{{ savings.name if savings else '' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Target Amount</label>
+                        <input type="number" step="0.01" name="goal" placeholder="0.00" class="form-input" value="{{ savings.goal if savings else '' }}" required>
+                    </div>
+                </div>
+                <button type="submit" class="form-button form-button-sm">Save Goal</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Transaction -->
+    <div class="form-section">
+        <div class="section-header">
+            <span class="section-num">01</span>
+            <h2>New Transaction</h2>
+        </div>
+        <form action="/add" method="post" class="form-grid">
+            <div class="form-group">
+                <label class="form-label">Title</label>
+                <input type="text" name="title" placeholder="e.g. Salary, Groceries" required class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Amount</label>
+                <div class="amount-wrap">
+                    <span class="amount-prefix">{{ currency_symbol }}</span>
+                    <input type="number" step="0.01" name="amount" placeholder="0.00" required class="form-input amount-input">
+                </div>
+            </div>
+            <div class="form-group form-group-full">
+                <label class="form-label">Type</label>
+                <div class="type-toggle">
+                    <label class="type-option">
+                        <input type="radio" name="category" value="income" required>
+                        <span class="type-btn">↑ Income</span>
+                    </label>
+                    <label class="type-option">
+                        <input type="radio" name="category" value="expense">
+                        <span class="type-btn">↓ Expense</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group-full">
+                <button type="submit" class="form-button">
+                    Add Transaction <span class="btn-pop">+</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Transactions List -->
+    <div class="tx-section">
+        <div class="section-header">
+            <span class="section-num">02</span>
+            <h2>Transactions</h2>
+            {% if transactions %}<span class="tx-badge">{{ transactions|length }}</span>{% endif %}
+        </div>
+
+        {% if transactions %}
+        <div class="tx-list">
+            {% for t in transactions %}
+            <div class="tx-item {% if t.category == 'income' %}tx-inc{% else %}tx-exp{% endif %}">
+                <div class="tx-marker">{% if t.category == 'income' %}↑{% else %}↓{% endif %}</div>
+                <div class="tx-info">
+                    <span class="tx-title">{{ t.title }}</span>
+                    <span class="tx-date">{{ t.created_at }}</span>
+                </div>
+                <div class="tx-right">
+                    <span class="tx-amount">{% if t.category == 'income' %}+{% else %}−{% endif %}{{ currency_symbol }}{{ "%.2f"|format(t.amount) }}</span>
+                    <span class="tx-tag {% if t.category == 'income' %}tx-tag-inc{% else %}tx-tag-exp{% endif %}">{{ t.category }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty">
+            <div class="empty-icon">◻</div>
+            <p class="empty-msg">No transactions yet</p>
+            <p class="empty-hint">Add your first entry above</p>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+<script>
+function togglePiggyForm() {
+    const f = document.getElementById('piggy-form');
+    const isOpen = f.classList.toggle('open');
+    document.querySelector('.piggy-edit-btn').textContent = isOpen
+        ? '✕ Close'
+        : ('{{ savings }}' !== 'None' ? 'Edit' : '+ Set Goal');
+}
+</script>
+</body>
+</html>
