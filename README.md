@@ -221,22 +221,14 @@ This project is an assignment for **SWE40006 Deployment Task 3**, where students
 - ✅ Business logic implementation
 - ✅ API endpoint design
 
+## 📄 License
+
+This project is part of the SWE40006 coursework.
+
 ## 👨‍💻 Author
 
-**Jewelllllai**
+**Jewel Lai**
 
 Submitted as assignment work for SWE40006 Deployment Task 3
 
-## 📄 License
-
-This project is part of SWE40006 Deployment Task 3 - Educational Assignment.
-
-The base application was provided by the tutor. Custom configuration and deployment work has been added as part of the lab practice.
-
 ---
-
-**⚠️ Important**: 
-- This is a **completed assignment submission** — no contributions or suggestions are welcome
-- Not all code in this repository is original work; the base application was forked from the tutor's repository
-- This repository is for **educational purposes only** as part of the SWE40006 course
-- Production deployment should follow additional security practices including secret management, authentication, rate limiting, and monitoring
