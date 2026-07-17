@@ -2,17 +2,7 @@
 
 A modern, full-stack web application for personal finance management built with **FastAPI** and **MongoDB**. Track your income and expenses, manage savings goals, and monitor your financial health—all in one place.
 
-> **📚 Educational Project**: This is an assignment project (SWE40006 Deployment Task 3). The base application code was forked from the tutor's repository. This repository contains my custom **configuration, deployment, and containerization work** completed as part of the lab practice.
-
-## ⚠️ Important Notice
-
-**Not all code in this repository is written by me.** This is a forked repository from the tutor's codebase where I have implemented:
-- Docker and Docker Compose configuration
-- Environment variable management
-- Deployment pipeline setup
-- Custom configuration practices
-
-The base application logic (FastAPI endpoints, MongoDB integration, UI templates) was provided as the starting point. **No contributions or suggestions are welcome** — this is a completed assignment submission.
+> **📚 Educational Project**: This is an assignment project (SWE40006 Deployment Task 3). This repository contains my custom **application code, configuration, deployment, and containerization work** completed as part of the lab practice.
 
 ## 🎯 Features
 
@@ -196,30 +186,6 @@ Set a savings goal with a target amount and track your progress:
 - Check logs: `docker-compose logs app`
 - Verify `.env` file exists and contains required variables
 - Ensure port 8000 is not already in use: `docker-compose down`
-
-## 📚 Educational Context
-
-This project is an assignment for **SWE40006 Deployment Task 3**, where students:
-- Fork from a tutor repository as a starting point
-- Implement custom configuration and deployment strategies
-- Configure Docker and containerization
-- Set up proper environment variable management
-- Deploy applications following industry best practices
-- Learn deployment workflows and CI/CD concepts
-
-**My Contributions (Lab Practice Work):**
-- ✅ Docker containerization setup
-- ✅ Docker Compose orchestration configuration
-- ✅ Environment variable management implementation
-- ✅ Deployment pipeline configuration
-- ✅ Container networking and service configuration
-
-**Provided by Tutor:**
-- ✅ Base FastAPI application code
-- ✅ MongoDB integration
-- ✅ Frontend templates (HTML/CSS/JavaScript)
-- ✅ Business logic implementation
-- ✅ API endpoint design
 
 ## 📄 License
 
